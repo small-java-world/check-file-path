@@ -53,6 +53,28 @@ go build -o file-checker.exe
 ./file-checker.exe
 ```
 
+## システムワイドでの実行設定
+
+### Linux/macOS
+
+```bash
+# バイナリを/usr/local/binにコピー
+sudo cp file-checker /usr/local/bin/
+
+# または、~/.bashrcや~/.zshrcに以下を追加
+export PATH=$PATH:/path/to/file-checker
+```
+
+### Windows
+
+1. システムのプロパティを開く
+2. 環境変数をクリック
+3. システム環境変数のPATHを選択して編集
+4. file-checkerの実行ファイルがあるディレクトリのパスを追加
+5. OKをクリックして保存
+
+設定後は、任意のディレクトリから`file-checker`コマンドを実行できます。
+
 ## テスト実行
 
 ```bash
