@@ -83,33 +83,36 @@ go test -v
 
 ## 設定ファイル
 
-`.check_file_path.yaml`ファイルでパスのチェックルールを設定できます。以下は設定ファイルの例です：
+OSに応じて`.check_file_path.linux.yaml`または`.check_file_path.windows.yaml`ファイルでパスのチェックルールを設定できます。以下は設定ファイルの例です：
 
 ```yaml
 rules:
-  - pattern: "src/domain/*.kt"
-    description: "ドメインレイヤーのKotlinファイル"
-    allowed: true
-
-  - pattern: "src/presentation/controller/*.kt"
-    description: "プレゼンテーション層のコントローラー"
-    allowed: true
-
-  - pattern: "lib/**/*.kt"
-    description: "ライブラリ配下のKotlinファイル"
-    allowed: false
+  - base_path: "./src"
+    file_name: "Controller\\.kt$"
+    regexes:
+      - regex: "^.*/domain/.*$"
+        message: "NG: domain folder detected"
+      - regex: "^.*/presentation/controller/UserPoolController\\.kt$"
+        message: "OK: Valid file path"
+  - base_path: "./lib"
+    file_name: "Hoge\\.kt$"
+    regexes:
+      - regex: "^.*/someotherpath/.*$"
+        message: "NG: Invalid path"
 ```
 
 ### 設定項目の説明
 
-- `pattern`: チェック対象のファイルパスパターン（glob形式）
-  - `*`: 任意の文字列（ディレクトリ区切り文字を除く）
-  - `**`: 任意の階層のディレクトリ
+- `base_path`: チェック対象のベースディレクトリ
+  - 検索を開始するルートディレクトリを指定します
 
-- `description`: ルールの説明文（エラーメッセージに使用）
+- `file_name`: チェック対象のファイル名パターン
+  - 正規表現で指定します
+  - 例: `Controller\\.kt$`はファイル名が`Controller.kt`で終わるファイルにマッチ
 
-- `allowed`: 
-  - `true`: このパターンに一致するパスを許可
-  - `false`: このパターンに一致するパスを禁止
+- `regexes`: パスチェックルールのリスト
+  - `regex`: パスパターンを正規表現で指定
+  - `message`: パターンにマッチした際に表示するメッセージ
+    - マッチ結果の説明やエラーメッセージを設定します
 
-このツールは設定ファイルに基づいて、ファイルパスが適切な場所に配置されているかをチェックします。
+このツールは設定ファイルに基づいて、ファイルが適切な場所に配置されているかを正規表現でチェックし、指定されたメッセージを表示します。
