@@ -1,0 +1,13 @@
+rules:
+  - base_path: "./src"
+    file_name: "Controller\\.kt$"
+    regexes:
+      - regex: "^.*/domain/.*$"
+        message: "NG: domain folder detected"
+      - regex: "^.*/presentation/controller/UserPoolController\\.kt$"
+        message: "OK: Valid file path"
+  - base_path: "./lib"
+    file_name: "Hoge\\.kt$"
+    regexes:
+      - regex: "^.*/someotherpath/.*$"
+        message: "NG: Invalid path" 

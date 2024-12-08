@@ -1,0 +1,66 @@
+yaml
+rules:
+  - base_path: "./src" # 再帰的にチェック対象となるベースディレクトリ
+    file_name: "Controller\\.kt$" # 対象ファイル名の正規表現
+    regexes:
+      - regex: "^.*\\\\domain\\\\.*$" # パスがdomainを含む場合
+        message: "NG: domain folder detected"
+      - regex: "^.*\\\\presentation\\\\controller\\\\UserPoolController\\.kt$" # 特定のファイルパス
+        message: "OK: Valid file path"
+  - base_path: "./lib" # 再帰的にチェック対象となる別のベースディレクトリ
+    file_name: "Hoge\\.kt$" # 対象ファイル名の正規表現
+    regexes:
+      - regex: "^.*\\\\someotherpath\\\\.*$" # 無効なパスを示す正規表現
+        message: "NG: Invalid path"
+更新ポイント
+base_pathの再帰的チェック:
+
+各base_path内のすべてのサブディレクトリおよびファイルを再帰的に探索します。
+動作仕様:
+
+base_pathで指定されたディレクトリ以下のすべてのファイルを探索。
+ファイル名がfile_nameの正規表現に一致する場合、さらにregexesを使用してファイルパス全体を検証。
+条件に一致すれば指定されたmessageを表示。一致しない場合は「問題なし」と出力。
+使用例:
+
+./src配下のサブディレクトリを含めて、再帰的にController.ktを探索。
+一致した場合、パスに応じてメッセージを表示。
+./lib配下についても同様に探索。
+プログラムの変更内容
+以下のGoコードで、再帰的なファイル探索がすでに実装されています。このコードは、指定されたbase_pathからすべてのサブディレクトリを再帰的に検索し、ファイルをチェックします。
+
+func checkFiles(rule Rule) {
+	err := filepath.Walk(rule.BasePath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			result := matchFile(path, rule)
+			fmt.Println(result)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("Error walking the path %s: %v", rule.BasePath, err)
+	}
+}
+この部分のfilepath.Walkがディレクトリを再帰的に探索します。
+
+実行手順
+設定ファイル作成: .check_file_path.yamlを作成し、上記プロンプト内容を保存します。
+
+プログラム実行:
+
+go run main.go
+出力例:
+
+bash
+コードをコピーする
+Checking files in: ./src
+./src/domain/Example.kt: NG: domain folder detected
+./src/presentation/controller/UserPoolController.kt: OK: Valid file path
+./src/other/Example.kt: 問題なし
+Checking files in: ./lib
+./lib/someotherpath/Hoge.kt: NG: Invalid path
+./lib/other/Hoge.kt: 問題なし
+このプロンプトとコードにより、指定したディレクトリ配下のすべてのファイルを再帰的に探索・検証する動作が可能です。他に必要な追加要素があれば教えてください！

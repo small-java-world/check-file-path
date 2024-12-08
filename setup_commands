@@ -1,0 +1,34 @@
+mkdir file-path-checker
+cd file-path-checker
+go mod init file-path-checker
+touch main.go
+touch .check_file_path.yaml 
+go get gopkg.in/yaml.v3 
+
+mkdir -p src/domain
+mkdir -p src/presentation/controller
+mkdir -p lib/someotherpath
+mkdir -p lib/other
+
+touch src/domain/Controller.kt
+touch src/presentation/controller/UserPoolController.kt
+touch lib/someotherpath/Hoge.kt
+touch lib/other/Hoge.kt
+
+go mod tidy
+
+# Linuxやmacの場合
+go build -o file-checker
+
+# Windowsの場合
+go build -o file-checker.exe
+
+# Linuxやmacの場合
+./file-checker
+
+# Windowsの場合
+./file-checker.exe
+
+go test -v
+
+git add .

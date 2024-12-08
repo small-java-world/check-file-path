@@ -1,0 +1,41 @@
+# 依存関係
+node_modules/
+package-lock.json
+yarn.lock
+
+# ビルド出力
+dist/
+build/
+out/
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# ログファイル
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# エディタ/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# キャッシュ
+.cache/
+.next/
+.nuxt/
+.temp/
+
+# テストカバレッジ
+coverage/
+
+# その他
+.DS_Store
+Thumbs.db 
